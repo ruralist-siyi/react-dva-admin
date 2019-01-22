@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
+import './index.less';
 import './index.css';
+import styles from './index.module.less';
 
 class Test extends Component {
     constructor(props){
@@ -10,7 +12,7 @@ class Test extends Component {
 
     render() {
         return (
-            <div className="test">
+            <div className={styles.test}>
                 2222
             </div>
         )

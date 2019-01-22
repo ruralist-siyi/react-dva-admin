@@ -5,7 +5,6 @@ const path = require('path');
 //This plugin should be used only on production builds without style-loader in the loaders chain, especially if you want to have HMR in development.
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin"); //静态资源输出
-const CleanWebpackPlugin = require('clean-webpack-plugin'); //每一次打包前先删除上次打包
 const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
@@ -48,9 +47,9 @@ module.exports = {
               }
             },
             {
-              test: /\.css$/,
+              test: /\.(css|less)$/,
               include: path.resolve(__dirname, '../src'), //限制范围，提高打包速度
-              exclude: /node_modules/,
+              exclude: /node_modules|\.module\.less$/,
               // use: ["style-loader", "css-loader", "postcss-loader"]
               use: [
                 isProd ? MiniCssExtractPlugin.loader : "style-loader",
@@ -59,21 +58,83 @@ module.exports = {
                   options: {
                     sourceMap: true, // contaion .map file, use extract-text-webpack-plugin handle
                     importLoaders: 2, // 0 => no loaders (default); 1 => postcss-loader; 2 => postcss-loader, sass-loader
-                    // Minimize: isProd,
                   }
                 },
-                'postcss-loader'
+                'postcss-loader',
+                {
+                  loader: 'less-loader',
+                  options: {
+                    javascriptEnabled: true  //antd styles dynamic import must true
+                  }
+                },
                 ],
             },
+            {
+              test: /\.module\.less$/,
+              exclude: /node_modules/,
+              use: [
+                "style-loader",
+                {
+                  loader: 'css-loader',
+                  options: {
+                    sourceMap: true, // contaion .map file, use extract-text-webpack-plugin handle
+                    importLoaders: 3, 
+                    modules: true,
+                    localIdentName: '[name]__[local]___[hash:base64:5]' // example .css .test-module__test___3r_2x {...} 
+                  }
+                },
+                'resolve-url-loader',
+                {
+                  loader: 'less-loader',
+                  options: {
+                    javascriptEnabled: true  //antd styles dynamic import musr true
+                  }
+                },
+                "postcss-loader"
+              ]
+            },
+            {
+            test: /\.(gif|png|jpe?g|svg)$/i,
+            use: [
+              {
+                // 图片加载器，雷同file-loader，更适合图片，可以将较小的图片转成base64，减少http请求
+                // 如下配置，将小于8192byte的图片转成base64码
+                loader: 'url-loader',
+                options: {
+                  limit: '8192',
+                  name: '[name].[ext]?[hash]',
+                  useRelativePath: false,
+                  outputPath: function (fileName) {
+                    return 'static/images/' + fileName
+                  }
+                }
+              },
+              {
+                loader: 'image-webpack-loader', //压缩图片
+                options: {
+                  bypassOnDebug: isProd,
+                }
+              }
+            ]
+          },
+          {
+            test: /\.(eot|woff2?|ttf|svg)$/,
+            use: [
+              {
+                loader: "url-loader",
+                options: {
+                  name: "[name]-[hash:5].min.[ext]",
+                  limit: 5000, // fonts file size <= 5KB, use 'base64'; else, output svg file
+                  publicPath: "static/fonts/", //编译目录而已（/build/js/），不能用于html中的js引用。
+                  outputPath: "static/fonts/" //虚拟目录，自动指向path编译目录（/assets/ => /build/js/）。html中引用js文件时，必须引用此虚拟路径.
+                }
+              }
+            ]
+          }  
         ]
     },
     //loader 被用于转换某些类型的模块，而插件则可以用于执行范围更广的任务，插件的范围包括：打包优化、资源管理和注入环境变量。
     plugins: [
-      //每一次打包先清除dist目录下的上次打包文件。
-      new CleanWebpackPlugin(['dist'],{
-        root: path.resolve(__dirname , '../'),
-        verbose: true,
-      }),
       new HtmlWebPackPlugin({
         template: "./src/index.html",
         filename: "./index.html",
