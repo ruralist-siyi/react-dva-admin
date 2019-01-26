@@ -22,11 +22,29 @@
 
 5. .babelrc：Babel 会在正在被转录的文件的当前目录中查找一个 .babelrc 文件。 如果不存在，它会遍历目录树，直到找到一个 .babelrc 文件，或一个 package.json 文件中有 “babel”: {} 。
 
-6.  css解析：style-loader css-loader postcss-loader autoprefixer mini-css-extract-plugin
+6.  css解析：style-loader css-loader postcss-loader less-loader autoprefixer resolve-url-loader mini-css-extract-plugin
     1. css-loader: 加载.css文件.
     2. style-loader: 使用<style>将css-loader内部样式注入到我们的HTML页面.
-    3. postcss-loader: 自动添加浏览器前缀.
+    3. postcss-loader autoprefixer: 自动添加浏览器前缀.
+    4. mini-css-extract-plugin: webpack4版本应该使用的将css单独提取打包的插件。extract-text-webpack-plugin已废弃。
+    5. less-loader: 解析我们的less文件。
+    6. resolve-url-loader：解决样式中的url引用相对路径不会自动变化的问题。
 
+7. copy-webpack-plugin: 静态资源的拷贝也可以解决我们img标签的src路径引用不准确的问题。
+
+8. clean-webpack-plugin： 每一次build前先删除上一次build的文件夹。
+
+9. webpack-merge： 拆分配置文件，可以进行配置的合并。
+
+10. friendly-errors-webpack-plugin：在开发环境下，清除命令行中很多繁杂的信息。配置dev-server将错误信息暴露在网页上。
+
+11. webpack-notifier： 挺有意思的一个webpack打包是否成功的提示框。
+
+12. autodll-webpack-plugin: 用来代替webpack.Dllplugin的插件。以往使用都是需要打完dll包后手动引入到index.html不会自动插入正确的路径，而且以前的配置起来也比较复杂，这个插件简化了我们的操作。但是在未来webpack5的时候，就不需要将我们的几乎每次都不会变化的基础类库重复打包，也不需要dll来帮助我们提前打好这个公共包。（that webpack 5 planning to support caching out-of-the-box, AutoDllPlugin will soon be obsolete.）
+
+13. hard-source-webpack-plugin：通过缓存的方式来提升我们的构建速度。以往我们可以通过webpack添加cache：true或者是对babel-loader设置cacheDirectory：true。hard-source-webpack-plugin是给我们提供了一个中间缓存的模块，增加了我们的构建速度。这种缓存式的优化，或许就是webpack5的方向。
+
+14. happypack：将原有的 webpack 对 loader 的执行过程，从单一进程的形式扩展为多进程的模式，从而加速代码构建。对 js 和 ts 文件使用 happypack 收益最大。（据说vue-loader不能被happypack很好的支持。thread-loader可以通过将指定loader放入一个worker 池中，每个 worker 都是一个单独的有 600ms 限制的 node.js 进程，通过限制他们的行为，来解决loader耗时问题。thread-loader不可以和 mini-css-extract-plugin 结合使用。）
 
 
 #### 二、babel工作流程

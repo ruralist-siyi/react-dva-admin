@@ -3,6 +3,8 @@ import ReactDOM from "react-dom";
 import './index.less';
 import './index.css';
 import styles from './index.module.less';
+// import _ from 'lodash'; 
+// import {message} from 'antd';
 
 class Test extends Component {
     constructor(props){
@@ -13,7 +15,8 @@ class Test extends Component {
     render() {
         return (
             <div className={styles.test}>
-                2222
+                2222233333
+                <img src="/static/images/logo-login.png"  alt="上海鲜花港 - 郁金香" />
             </div>
         )
     }
