@@ -2,7 +2,6 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const WebpackNotifierPlugin = require('webpack-notifier');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
@@ -27,12 +26,6 @@ module.exports = merge(common, {
         messages: [`Your application is running here:localhost:8080`],
       },
       clearConsole: true,
-    }),
-    // 这里是根据node-notifier这个node模块引申，社区中找到webpack-notifier，挺有意思。本来是打算使用WebpackDashboard，但是很鸡肋。
-    new WebpackNotifierPlugin({
-      title: 'Webpack',
-      excludeWarnings: true,
-      alwaysNotify: true
     })
   ],
 })

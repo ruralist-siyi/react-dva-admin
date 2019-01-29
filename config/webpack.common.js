@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin"); //静态资源输出
 const AutoDllPlugin = require('autodll-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const WebpackNotifierPlugin = require('webpack-notifier');
 const HappyPack = require('happypack');
 const os = require('os');
 const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
@@ -151,6 +152,12 @@ module.exports = {
         removeComments: isProd,  //移除HTML中的注释
         collapseWhitespace: isProd, //把生成的 index.html 文件的内容的没用空格去掉，减少空间
       },
+    }),
+    // 这里是根据node-notifier这个node模块引申，社区中找到webpack-notifier，挺有意思。本来是打算使用WebpackDashboard，但是很鸡肋。
+    new WebpackNotifierPlugin({
+      title: 'Webpack',
+      excludeWarnings: true,
+      alwaysNotify: true
     }),
     new HardSourceWebpackPlugin({
       // Either an absolute path or relative to webpack's options.context.
