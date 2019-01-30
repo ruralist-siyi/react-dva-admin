@@ -7,6 +7,12 @@ const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   mode: 'production',
+  devtool: false,
+  performance: {
+    hints: false,
+    maxEntrypointSize: 512000,
+    maxAssetSize: 512000
+  },
   plugins: [
     //每一次打包先清除dist目录下的上次打包文件。
     new CleanWebpackPlugin(['dist'], {
@@ -14,4 +20,4 @@ module.exports = merge(common, {
       verbose: true,
     })
   ]
-})
+});

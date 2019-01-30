@@ -17,7 +17,8 @@
     6. @babel/plugin-proposal-class-properties: This plugin transforms static class properties as well as properties declared with the property initializer syntax.
     7. @babel/polyfill: 改全局的对象的原型，添加不兼容的 api 方法，或者修改不兼容的 api 方法。可以解析js的新方法：Promise、WeakMap、Array.from、Object.assgin等。避免极少数浏览器（IE）的兼容问题。（https://babeljs.io/docs/en/babel-polyfill/）（这个是在你的source code 前运行的，所以安装的时候是 --save）
     8. @babel/plugin-transform-runtime: 1. 如果你想使用 generator ， 有两个办法，一个就是引入 bable-polyfill 这个大家伙儿，另一个就是使用这个插件. 2. 就是能帮助我们解决一些高级语法的问题，它会在构建时帮你自动引入，用到什么引什么。 3. 它的缺陷是它只能帮我们引入静态方法和一些内建模块，如 Object.assign Promise 等。实例方法是不会做转换的，如 "foobar".includes("foo") . (https://babeljs.io/docs/en/babel-plugin-transform-runtime/)。
-    9. @babel/plugin-syntax-dynamic-import：按需加载。
+    9. @babel/plugin-syntax-dynamic-import：Allow parsing of import(),可以按需加载。
+    10. babel-plugin-import: 按需加载我们的antd组件。
     Note: @babel/preset-env，@babel/polyfill、@babel/plugin-transform-runtime我们三者选择其一。polyfill的缺点在于他体积太大、会作用与全局对象。所以如果你是开发一个框架或者一个类库的时候建议不要使用polyfill。但是个人开发项目，可以使用polyfill，因为他是比较稳妥的方式。babel-runtime是按需引入打包体积最小的方式，但是不能模拟实例方法。babel-preset-env（开启useBuiltIns:根据当前配置的环境去加载对应的一系列插件）。这个体积折中，也是按需加载，但是他可配置性高。
 
 5. .babelrc：Babel 会在正在被转录的文件的当前目录中查找一个 .babelrc 文件。 如果不存在，它会遍历目录树，直到找到一个 .babelrc 文件，或一个 package.json 文件中有 “babel”: {} 。
@@ -45,6 +46,7 @@
 13. hard-source-webpack-plugin：通过缓存的方式来提升我们的构建速度。以往我们可以通过webpack添加cache：true或者是对babel-loader设置cacheDirectory：true。hard-source-webpack-plugin是给我们提供了一个中间缓存的模块，增加了我们的构建速度。这种缓存式的优化，或许就是webpack5的方向。
 
 14. happypack：将原有的 webpack 对 loader 的执行过程，从单一进程的形式扩展为多进程的模式，从而加速代码构建。对 js 和 ts 文件使用 happypack 收益最大。（据说vue-loader不能被happypack很好的支持。thread-loader可以通过将指定loader放入一个worker 池中，每个 worker 都是一个单独的有 600ms 限制的 node.js 进程，通过限制他们的行为，来解决loader耗时问题。thread-loader不可以和 mini-css-extract-plugin 结合使用。）
+
 
 
 #### 二、babel工作流程

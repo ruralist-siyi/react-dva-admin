@@ -1,16 +1,43 @@
 {
   "presets": [
-    ["@babel/preset-env",
+    [
+      "@babel/preset-env",
       {
         "targets": {
           "browsers": [
-            ">1%", // 全球超过1%人使用的浏览器
-            "last 4 versions", // 所有浏览器兼容到最后四个版本根据CanIUse.com追踪的版本
-            "not ie < 9" // 排除IE9以下的浏览器
+            ">1%",
+            // 全球超过1%人使用的浏览器
+            "last 4 versions",
+            // 所有浏览器兼容到最后四个版本根据CanIUse.com追踪的版本
+            "not ie < 9"
+            // 排除IE9以下的浏览器
           ]
-        },
+        }
       }
-    ], 
-    ["@babel/preset-react"]
-  ]
+    ],
+    [
+      "@babel/preset-react"
+    ]
+  ],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "libraryDirectory": "es",
+        "style": true
+        // `style: true` 会加载 less 文件
+      }
+    ],
+    ["@babel/plugin-transform-runtime"],
+    ["@babel/plugin-syntax-dynamic-import"],
+    ["@babel/plugin-proposal-decorators", {"legacy": true }],
+    ["@babel/plugin-proposal-class-properties"]
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+      ]
+    }
+  }
 }
