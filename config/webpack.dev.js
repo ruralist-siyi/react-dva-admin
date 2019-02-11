@@ -12,7 +12,6 @@ module.exports = merge(common, {
     contentBase: path.resolve(__dirname, '../dist'),// 设置服务器访问的基本目录
     host: 'localhost',
     open: true,
-    compress: true, // 开启gzip
     inline: true,
     overlay: true, //在页面上显示错误信息: 本来打算使用redbox-react，但是发现没必要
     quiet: true, // lets WebpackDashboard do its thing ，禁止显示devServer的console信息

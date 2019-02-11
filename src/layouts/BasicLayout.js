@@ -1,5 +1,11 @@
 import React from 'react';
 import {Button} from 'antd';
+import memoizeOne from 'memoize-one';
+import {connect} from 'dva';
+
+@connect(() => {
+
+})
 class BasicLayout extends React.Component {
   constructor(props){
     super(props);
@@ -9,7 +15,6 @@ class BasicLayout extends React.Component {
   render() {
     return (
       <div>
-        basicLayout
         <Button type="primary">Primary</Button>
       </div>
     )

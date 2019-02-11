@@ -24,7 +24,9 @@ module.exports = {
   //__dirname 表示当前文件所在的目录的绝对路径,__filename 表示当前文件的绝对路径.process cwd() 方法返回 Node.js 进程当前工作的目录
   output: {
     filename: "js/[name].[hash].js",
-    path: path.resolve(__dirname, "../dist")
+    path: path.resolve(__dirname, "../dist"),
+    //React使用react-Router时多级路由刷新时报404的问题
+    publicPath: '/'
   },
   resolve: {
     extensions: [".js", ".jsx", ".ts", ".tsx", ".less", ".json", ".css"],
@@ -203,7 +205,8 @@ module.exports = {
       path: "static/js",
       plugins: [
         new UglifyJsPlugin({
-          sourceMap: !isProd
+          sourceMap: !isProd,
+          cache: true,
         })
       ],
       entry: {

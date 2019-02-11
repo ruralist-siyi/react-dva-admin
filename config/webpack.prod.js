@@ -3,6 +3,7 @@ const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
@@ -18,6 +19,15 @@ module.exports = merge(common, {
     new CleanWebpackPlugin(['dist'], {
       root: path.resolve(__dirname, '../'),
       verbose: true,
+    }),
+    new CompressionPlugin({ //gzip 压缩
+      algorithm: 'gzip',
+      cache: true,
+      test: new RegExp(
+        '\\.(js|css)$'    //压缩 js 与 css
+      ),
+      threshold: 10240,
+      minRatio: 0.8
     })
   ]
 });
