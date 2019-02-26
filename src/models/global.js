@@ -6,8 +6,6 @@
 */
 
 import {fromJS} from 'immutable';
-import nanoid from 'nanoid';
-import {routerRedux} from 'dva/router';
 
 const initialState = fromJS({
   routesData: {}

@@ -7,9 +7,7 @@ import LoginForm from '../components/Login/LoginForm';
 class UserLayout extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-
-    }
+    this.state = {}
   }
 
   render() {
@@ -17,7 +15,8 @@ class UserLayout extends Component {
       <React.Fragment>
         <div className={styles['user-wrap']}>
           <div className={styles['login-content']}>
-            <AuthorizedRoute component={LoginForm} path='/user/login' authority={true} />
+            <img className={styles['login-logo']} src="/static/images/login-logo.png" alt=""/>
+            <AuthorizedRoute component={LoginForm} path='/user/login' authority={true}/>
           </div>
         </div>
       </React.Fragment>
