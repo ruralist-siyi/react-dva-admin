@@ -92,7 +92,11 @@ function dynamicWrapper(app, models = [], component) {
 //   return routesData;
 // };
 
-
+/**
+ * 获取路由配置
+ * @param app
+ * @returns {{path: string, routes: *[], component: *, name: string}[]}
+ */
 export const getRoutesConfig = (app) => {
   return [
     {

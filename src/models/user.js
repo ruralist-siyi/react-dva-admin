@@ -6,9 +6,11 @@
  */
 
 import {fromJS} from 'immutable';
+import user from '../services/user';
 import {routerRedux} from 'dva/router';
 
 const initialState = fromJS({
+  userInfo: {},
   routesData: {}
 });
 
@@ -16,8 +18,14 @@ export default {
   namespace: 'user',
   state: initialState,
   reducers: {
-    setRoutesData(state, {payload: routesData}) {
-      return state.set('routesData', routesData);
+    setUserInfo(state, {payload}) {
+      return state.set('userInfo', payload);
+    },
+    setResourceList(state, {payload}) {
+      return state.set('resourceList', payload);
+    },
+    setRoutesData(state, {payload}) {
+      return state.set('routesData', payload);
     },
   },
   effects: {
@@ -27,12 +35,17 @@ export default {
      *
      * @param {*} { payload }
      * @param {*} { call, put, select, take }
-     */* login({payload}, {call, put, select, take}) {
+     */
+    * login({payload}, {call, put, select, take}) {
       const {body} = payload;
       try {
-        // const { data } = yield call(user.login, body, { checkToken: false });
+        const { data } = yield call(user.login, body, { checkToken: false });
+        const resourceList = data.resourceList || [];
+        delete data.resourceList;
         // 存储用户信息
         yield put({type: 'setUserInfo', payload: data});
+        // 存储权限资源信息
+        yield put({type: 'setResourceList', payload: resourceList});
         // 存储token, token
         sessionStorage.setItem('token', data.token);
       } catch (error) {

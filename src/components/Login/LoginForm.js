@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {Bind} from 'lodash-decorators';
 import {Card, Form, Icon, Input, Button} from 'antd';
+import {connect} from 'dva';
 import verification from '../../utils/verificationCode';
 import styles from './LoginForm.module.less';
 
+@connect()
 @Form.create()
 class LoginForm extends Component {
   constructor(props) {
@@ -16,11 +18,22 @@ class LoginForm extends Component {
     }
   }
 
-
   componentDidMount() {
     this.createCode();
   }
 
+  // 登陆请求
+  @Bind()
+  login(params) {
+    this.props.dispatch({
+      type: 'user/login',
+      payload: {
+        body: {
+          ...params
+        }
+      }
+    })
+  }
 
   // 创建验证码
   @Bind()
@@ -34,6 +47,13 @@ class LoginForm extends Component {
   @Bind()
   handleLoginSubmit(event) {
     event.preventDefault();
+    const {form} = this.props;
+    this.props.form.validateFields({}, (errors, values) => {
+      if (!errors) {
+        this.login(values);
+       // console.log(values);
+      }
+    });
   }
 
   // 渲染登录表单
@@ -41,13 +61,12 @@ class LoginForm extends Component {
   renderForm() {
     const {code, dataURL} = this.state.verifyCode;
     const {getFieldDecorator} = this.props.form;
-    console.log(code, dataURL);
     return (
       <Form onSubmit={this.handleLoginSubmit} className={styles['login-form']}>
         <input id="fakeUsername" style={{display: 'none'}} name="username"/>
         <input id="fakePassword" style={{display: 'none'}} type="password" name="password"/>
         <Form.Item className={styles['login-form-item']}>
-          {getFieldDecorator('userName', {
+          {getFieldDecorator('loginAccount', {
             rules: [{required: true, message: '请输入用户名!'}],
           })(
             <Input

@@ -6,13 +6,13 @@
  * @returns 返回生成图片的 base64 url 和图片内容
  */
 exports.create = function () {
-  var selfWidth  = 80,
+  var selfWidth = 100,
     selfHeight = 30,
-    canvas     = document.createElement('canvas'),
-    ctx        = canvas.getContext('2d'),
-    temp       = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ23456789'.split(''),
-    vCode      = '',
-    color      = 'rgb(' + randInt(1, 255) + ',' + randInt(1, 255) + ',' + randInt(1, 255) + ')';
+    canvas = document.createElement('canvas'),
+    ctx = canvas.getContext('2d'),
+    temp = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ23456789'.split(''),
+    vCode = '',
+    color = 'rgb(' + randInt(1, 255) + ',' + randInt(1, 255) + ',' + randInt(1, 255) + ')';
 
   canvas.width = selfWidth;
   canvas.height = selfHeight;
@@ -40,9 +40,9 @@ exports.create = function () {
 
   ctx.beginPath();
   ctx.strokeStyle = color;
-  var b         = randFloat(selfHeight / 4, 3 * selfHeight / 4),
-    f         = randFloat(selfHeight / 4, 3 * selfHeight / 4),
-    w         = 2 * Math.PI / (randFloat(selfHeight * 1.5, selfWidth)),
+  var b = randFloat(selfHeight / 4, 3 * selfHeight / 4),
+    f = randFloat(selfHeight / 4, 3 * selfHeight / 4),
+    w = 2 * Math.PI / (randFloat(selfHeight * 1.5, selfWidth)),
     linePoint = function (x) {
       return randFloat(10, selfHeight / 2) * Math.sin(w * x + f) + b;
     };

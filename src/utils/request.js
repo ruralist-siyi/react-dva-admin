@@ -17,12 +17,8 @@ const envURLs = {
   uat: 'http://192.168.3.122:8035',
 };
 // 接口请求的域名，两种选择方式，默认dev的url
-// 生产模式下，才根据参数选择baseUrl
-// export const baseURL = process.env.NODE_ENV === 'development'
-//   ? envURLs.dev
-//   : envURLs[process.env.PRODUCTION_ENV.toLowerCase()] || envURLs.dev;
 // 完全根据参数选择baseURL
-const baseURL = envURLs[process.env.PRODUCTION_ENV.toLowerCase()] || envURLs.dev;
+const baseURL = process.env.BUILD_ENV ? envURLs[process.env.BUILD_ENV.toLowerCase()] : envURLs.dev;
 
 /**
  * 基本 fetch 配置
@@ -41,7 +37,7 @@ const defaultBody = {
   // 必传参数
   terminalType: '2',
   tenantId: '0001',
-}
+};
 
 
 
@@ -56,8 +52,6 @@ function checkStatus(response) {
     return response;
   }
   if (response.status === 401) {
-    // error = new RequestException('401', '登录超时，请重新登录');
-    // store.dispatch(routerRedux.push('/index/login'));
     return response;
   }
   let error = new HttpException(response);
@@ -135,8 +129,6 @@ function _request (reqOpts, options = {}) {
     serialId: nanoid(),
   };
 
-  // process.env.NODE_ENV === 'development' && console.log(`api: ${reqOpts.url} request body:`, body);
-
   // 根据请求方式，转换请求数据
   if (method.toLowerCase() === 'get') {
     paramStr = '?';
@@ -155,7 +147,7 @@ function _request (reqOpts, options = {}) {
       () => reject(new RequestException('网络超时', '当前网络环境不稳定，请稍后再试。')),
       timeout,
     );
-  })
+  });
   // 返回请求promise
   const fetchPromise = fetch(`${url}${paramStr}`, {
     ...fetchConfig,

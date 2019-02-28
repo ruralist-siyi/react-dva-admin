@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 import dva from 'dva';
 import createHistory from 'history/createBrowserHistory';
 import {createLogger} from 'redux-logger';
+import {notification} from 'antd'
 import createLoading from 'dva-loading';
 import Immutable from 'immutable';
 import global from './models/global';
+import user from './models/user';
 import './global.less';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -17,14 +19,22 @@ const dvaConfig = {
   //指定初始数据，优先级高于 model 中的 state，默认是 {}
   initialState: {},
   //如果我们用 antd，那么最简单的全局错误处理
-  onError(e) {
-    console.error(e);
+  onError(error) {
+    // 必须要preventDefault，否则错误还是会抛出
+    error.preventDefault();
+    // 全局error处理
+    notification.error({
+      key: error.name,
+      message: error.name,
+      description: error.message,
+    });
+    console.log(error);
   }
 };
 let app = dva(dvaConfig);
 
-if(isDev) {
-  import("react-hot-loader/root").then(({ hot }) => {
+if (isDev) {
+  import("react-hot-loader/root").then(({hot}) => {
     app = hot(dva(dvaConfig));
   });
 }
@@ -37,10 +47,6 @@ if (isDev) {
     // redux-logger
     onAction: createLogger({
       collapsed: (getState, action, logEntry) => {
-        // 收起@开头和persist开头的action，或者没有error时
-        // if (action.type.match(/^(@)|(persist)/) || !logEntry.error) {
-        //   return true;
-        // }
         // 收起所有的log,需要看哪个再展开
         return true;
       },
@@ -62,7 +68,7 @@ if (isDev) {
 
 // 默认只导入 global, setting, user
 // 这三个是基本的model，其他model属于业务model，在controller中需要及时对数据进行清理
-const models = [global];
+const models = [global, user];
 models.forEach(m => app.model(m));
 
 // 配置路由
