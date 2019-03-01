@@ -48,6 +48,9 @@ export default {
         yield put({type: 'setResourceList', payload: resourceList});
         // 存储token, token
         sessionStorage.setItem('token', data.token);
+
+        // 跳转到首页
+        yield put(routerRedux.push('/home'));
       } catch (error) {
         throw error;
       }
