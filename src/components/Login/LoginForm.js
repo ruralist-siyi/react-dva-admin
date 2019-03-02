@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
-import {Card, Form, Icon, Input, Button} from 'antd';
+import React from 'react';
+import {Form, Icon, Input, Button} from 'antd';
 import styles from './LoginForm.module.less';
+import PropTypes from "prop-types";
 
 const LoginForm = React.memo(({form: {getFieldDecorator}, createCode, submit, verifyCode: {code, dataURL}}) => {
   return (
@@ -9,7 +10,10 @@ const LoginForm = React.memo(({form: {getFieldDecorator}, createCode, submit, ve
       <input id="fakePassword" style={{display: 'none'}} type="password" name="password"/>
       <Form.Item className={styles['login-form-item']}>
         {getFieldDecorator('loginAccount', {
-          rules: [{required: true, message: '请输入用户名'}],
+          validateTrigger: 'onBlur',
+          rules: [
+            {required: true, message: '请输入用户名'}
+          ],
         })(
           <Input
             addonBefore={<Icon type="user" style={{color: '#909399'}}/>}
@@ -21,7 +25,10 @@ const LoginForm = React.memo(({form: {getFieldDecorator}, createCode, submit, ve
       </Form.Item>
       <Form.Item className={styles['login-form-item']}>
         {getFieldDecorator('password', {
-          rules: [{required: true, message: '请输入密码'}],
+          validateTrigger: 'onBlur',
+          rules: [
+            {required: true, message: '请输入密码'}
+          ],
         })(
           <Input.Password
             addonBefore={<Icon type="lock" style={{color: '#909399'}}/>}
@@ -34,7 +41,19 @@ const LoginForm = React.memo(({form: {getFieldDecorator}, createCode, submit, ve
       </Form.Item>
       <Form.Item className={styles['login-form-item']}>
         {getFieldDecorator('code', {
-          rules: [{required: true, message: '请输入验证码'}],
+          validateTrigger: 'onBlur',
+          rules: [
+            {required: true, message: '请输入验证码'},
+            {
+              validator: (_, value, callback) => {
+                if (value.toUpperCase() !== code.toUpperCase()) {
+                  callback('验证码错误');
+                  return;
+                }
+                callback();
+              }
+            }
+          ],
         })(
           <Input
             addonBefore="验证码"
@@ -49,5 +68,12 @@ const LoginForm = React.memo(({form: {getFieldDecorator}, createCode, submit, ve
     </Form>
   )
 });
+
+LoginForm.propTypes = {
+  createCode: PropTypes.func,
+  submit: PropTypes.func,
+  form: PropTypes.object,
+  verifyCode: PropTypes.object,
+};
 
 export default Form.create()(LoginForm);

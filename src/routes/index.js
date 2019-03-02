@@ -9,17 +9,6 @@ import React from 'react';
 import Loading from '../components/common/Loading';
 import {modelNotRegister, getModelsObj} from '../utils/router';
 
-// //https://webpack.docschina.org/guides/dependency-management/ 依赖管理 ：使用 require.context() 方法来创建自己的（模块）上下文
-// const context = require.context('../models', true, /\.js$/); //3 个参数：要搜索的文件夹目录，是否还应该搜索它的子目录，以及一个匹配文件的正则表达式。
-// // 将model和它的路径存在map里
-// let modelMap = context.keys().reduce((prev, path) => {
-//   let reg = /\/(\w+)\.js$/;
-//   if (reg.test(path)) {
-//     prev[path.match(reg)[1]] = path;
-//   }
-//   return prev;
-// }, {});
-
 /**
  * 组件动态的wrapper Code-Splitting ：去除react-loadable 使用新API lazy and suspense
  * 动态加载组件，动态注册model
@@ -62,36 +51,6 @@ function dynamicWrapper(app, models = [], component) {
 }
 
 
-// // 始化路由配置方法，检测配置路由的权限是否存在，如果没有配置权限，默认设为false，检测配置路由的强匹配（exact）是否存在，如果没有配置，默认设为true
-// export const initRoutesData = (app) => {
-//   // 路由配置对象
-//   let routesData = {
-//     '/index': {
-//       exact: false,
-//       authority: true,
-//       abstract: true,
-//       // component: dynamicWrapper(app, [], () => import('../layouts/IndexLayout')),
-//     },
-//     '/': {
-//       exact: true,
-//       authority: true,
-//       abstract: true,
-//       component: dynamicWrapper(app, [], React.lazy(() => import('../layouts/BasicLayout'))),
-//     },
-//   };
-//
-//   for (const path in routesData) {
-//     if (routesData[path].authority === undefined) {
-//       routesData[path].authority = false;
-//     }
-//     if (routesData[path].exact === undefined) {
-//       routesData[path].exact = true;
-//     }
-//     routesData[path].path = path;
-//   }
-//   return routesData;
-// };
-
 /**
  * 获取路由配置
  * @param app
@@ -101,11 +60,11 @@ export const getRoutesConfig = (app) => {
   return [
     {
       path: '/user',
-      component: dynamicWrapper(app, [], React.lazy(() => import('../layouts/BasicLayout'))),
+      component: dynamicWrapper(app, [], React.lazy(() => import('../layouts/UserLayout'))),
       name: '用户',
       routes: [
         {path: '/user', redirect: '/user/login'},
-        {path: '/user/login', component: dynamicWrapper(app, [], React.lazy(() => import('../layouts/BasicLayout'))), name: '登录' },
+        {path: '/user/login', component: dynamicWrapper(app, [], React.lazy(() => import('../containers/Login'))), name: '登录' },
       ],
     },
   ];

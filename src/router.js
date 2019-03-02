@@ -3,7 +3,7 @@
  * @author siyi
  * @date 2019/1/293:20 PM
  * @contact dajiadoujiaowosiyi@163.com
-*/
+ */
 import React from 'react';
 import {routerRedux, Route, Switch, Redirect} from 'dva/router';
 // antd 国际化配置
@@ -29,7 +29,7 @@ const Router = ({history, routesData}) => {
             path={'/'}
             component={BasicLayout}
             exact={false}
-            authority={false}
+            authority={() => sessionStorage.getItem('token')}
             redirect={'/user/login'}
           />
         </Switch>

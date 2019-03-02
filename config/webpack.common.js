@@ -1,5 +1,6 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require("path");
+const setting  = require('./setting.js');
 // 抽离css样式，防止将样式打包在js中引起页面样式加载错乱的现象。
 // extract-text-webpack-plugin does not work with webpack 4. Use mini-css-extract-plugin instead.
 //This plugin should be used only on production builds without style-loader in the loaders chain, especially if you want to have HMR in development.
@@ -11,9 +12,9 @@ const WebpackNotifierPlugin = require("webpack-notifier");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const HappyPack = require("happypack");
 const os = require("os");
-const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
+const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
 
-const isProd = process.env.NODE_ENV === "production";
+const isDev = process.env.NODE_ENV === "development";
 
 module.exports = {
   // 入口起点：指定webpack默认使用哪个模版作为构建的开始。webpack来找出有那些模块和包是和入口七点直接和间接依赖的。（默认值为./src/index.js）
@@ -63,7 +64,7 @@ module.exports = {
         exclude: /\.module\.less$/,
         // use: ["style-loader", "css-loader", "postcss-loader"]
         use: [
-          isProd ? MiniCssExtractPlugin.loader : "style-loader",
+          isDev ? "style-loader" : MiniCssExtractPlugin.loader,
           {
             loader: "css-loader",
             options: {
@@ -75,6 +76,7 @@ module.exports = {
           {
             loader: "less-loader",
             options: {
+              modifyVars: setting.theme || {},
               javascriptEnabled: true //antd styles dynamic import must true
             }
           }
@@ -115,7 +117,7 @@ module.exports = {
               limit: "8192",
               name: "[name].[ext]?[hash]",
               useRelativePath: false,
-              outputPath: function(fileName) {
+              outputPath: function (fileName) {
                 return "static/images/" + fileName;
               },
               publicPath: "static/images/"
@@ -124,7 +126,7 @@ module.exports = {
           {
             loader: "image-webpack-loader", //压缩图片
             options: {
-              bypassOnDebug: isProd
+              bypassOnDebug: !isDev
             }
           }
         ]
@@ -151,10 +153,10 @@ module.exports = {
       template: "./src/index.html",
       filename: "./index.html",
       inject: true, // will inject the main bundle to index.html
-      hash: isProd, //为了更好的 cache，可以在文件名后加个 hash。
+      hash: !isDev, //为了更好的 cache，可以在文件名后加个 hash。
       minify: {
-        removeComments: isProd, //移除HTML中的注释
-        collapseWhitespace: isProd //把生成的 index.html 文件的内容的没用空格去掉，减少空间
+        removeComments: !isDev, //移除HTML中的注释
+        collapseWhitespace: !isDev //把生成的 index.html 文件的内容的没用空格去掉，减少空间
       }
     }),
     // 这里是根据node-notifier这个node模块引申，社区中找到webpack-notifier，挺有意思。本来是打算使用WebpackDashboard，但是很鸡肋。
@@ -205,7 +207,7 @@ module.exports = {
       path: "static/js",
       plugins: [
         new UglifyJsPlugin({
-          sourceMap: !isProd,
+          sourceMap: isDev,
           cache: true,
         })
       ],

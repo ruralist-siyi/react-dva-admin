@@ -1,15 +1,15 @@
-
-import { routerRedux } from 'dva/router';
+import {routerRedux} from 'dva/router';
 import FileSaver from 'file-saver';
 import nanoid from 'nanoid';
+import {decryptAES} from './crypto';
 
 import store from '../index';
 
 import moment from 'moment';
-import { isString } from './index';
-import { HttpException, RequestException, Exception } from './exception';
+import {isString} from './index';
+import {HttpException, RequestException, Exception} from './exception';
 
-import { trimReg } from '../constants/regexp';
+import {trimReg} from '../constants/regexp';
 
 const envURLs = {
   dev: 'http://192.168.3.122:8035',
@@ -18,7 +18,8 @@ const envURLs = {
 };
 // 接口请求的域名，两种选择方式，默认dev的url
 // 完全根据参数选择baseURL
-const baseURL = process.env.BUILD_ENV ? envURLs[process.env.BUILD_ENV.toLowerCase()] : envURLs.dev;
+const isDev = process.env.NODE_ENV === 'development';
+const baseURL = !isDev ? envURLs[process.env.NODE_ENV.toLowerCase()] : envURLs.dev;
 
 /**
  * 基本 fetch 配置
@@ -38,7 +39,6 @@ const defaultBody = {
   terminalType: '2',
   tenantId: '0001',
 };
-
 
 
 /**
@@ -64,20 +64,20 @@ function checkStatus(response) {
  * @param {Object} data 请求返回的数据
  * @returns 接口返回的数据
  */
-function onResponse (data) {
+function onResponse(data) {
   if (data.code === '000000') {
     return data;
   }
   const error = new RequestException(data.code, data.message);
   if (data.code === '011001') {
     error.message = 'token 不可用，请重新登录';
-    store.dispatch(routerRedux.push('/index/login'));
+    store.dispatch(routerRedux.push('/user/login'));
   }
   if (data.code === '011002') {
     error.message = '用户没有权限';
   }
   throw error;
-};
+}
 
 
 /**
@@ -108,10 +108,11 @@ function defaultStringifyReplacer(key, value) {
  * @param {*} [options={}] 其他参数
  * @returns
  */
-function _request (reqOpts, options = {}) {
-  const { method = 'post' } = reqOpts,
-    { checkToken = true, timeout = defaultTimeout, stringifyReplacer = defaultStringifyReplacer } = options,
-    token = sessionStorage.getItem('token') || null;
+function _request(reqOpts, options = {}) {
+  const {method = 'post'} = reqOpts,
+    {checkToken = true, timeout = defaultTimeout, stringifyReplacer = defaultStringifyReplacer} = options,
+    token = sessionStorage.getItem('token') ? decryptAES(sessionStorage.getItem('token'), 'token') : null;
+  // token = null;
   // 完整的url
   let url = baseURL + reqOpts.url;
 
@@ -120,7 +121,7 @@ function _request (reqOpts, options = {}) {
   }
 
   // 添加 token 参数
-  let { body = null } = reqOpts,
+  let {body = null} = reqOpts,
     paramStr = '';
   body = {
     ...defaultBody,
@@ -135,7 +136,7 @@ function _request (reqOpts, options = {}) {
     for (const key in body) {
       paramStr += `${key}=${body[key]}&`;
     }
-    paramStr = paramStr.slice(0, paramStr.length-1);
+    paramStr = paramStr.slice(0, paramStr.length - 1);
   }
   if (method.toLowerCase() === 'post') {
     body = JSON.stringify(body, stringifyReplacer);
@@ -188,7 +189,7 @@ export const createFileRequest = (url) => {
  * @param {Object} options 自定义选项
  * @returns Promise 对象
  */
-export function request (reqOpts, options = {}) {
+export function request(reqOpts, options = {}) {
   return _request(reqOpts, options).then(
     // 将返回的数据转换成 json 对象
     (res) => res.json()
@@ -204,10 +205,10 @@ export function request (reqOpts, options = {}) {
  * @param {*} [options={}]
  * @returns
  */
-export function requestFile (reqOpts, options = {}) {
+export function requestFile(reqOpts, options = {}) {
   // options.fileName 文件名，带后缀
   // 文件名
-  let fileName = new Date().getTime()+'';
+  let fileName = new Date().getTime() + '';
   if (options.fileName) {
     const [name, suffix] = fileName.split('.');
     fileName = `${name}${moment(new Date()).format('YYYY_MM_DD_hh_mm_ss')}.${suffix}`;
@@ -218,7 +219,7 @@ export function requestFile (reqOpts, options = {}) {
       // 从content-disposition获取文件名
       const disposition = res.headers.get('content-disposition');
       const matches = /filename=-([^"]*)/.exec(disposition);
-      fileName = matches !== null && matches[1]? matches[1]: fileName;
+      fileName = matches !== null && matches[1] ? matches[1] : fileName;
       // 文件下载成功，会返回文件流；如果文件下载失败，会返回json数据
       if (contentType.match('application/octet-stream')) {
         return res.blob();
@@ -251,7 +252,7 @@ export function requestFile (reqOpts, options = {}) {
  * @param {*} [options={}]
  * @returns
  */
-export function requestFileStream (reqOpts, options = {}) {
+export function requestFileStream(reqOpts, options = {}) {
   return _request(reqOpts, options).then(
     (res) => {
       const contentType = res.headers.get('content-type');

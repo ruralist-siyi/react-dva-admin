@@ -6,10 +6,10 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --config config/webpack.dev.js",
-    "build": "cross-env NODE_ENV=production BUILD_ENV=DEV webpack --config config/webpack.prod.js",
-    "build:sit": "cross-env NODE_ENV=production BUILD_ENV=SIT webpack --config config/webpack.dll.js",
-    "build:uat": "cross-env NODE_ENV=production BUILD_ENV=UAT webpack --config config/webpack.dll.js",
-    "build:pro": "cross-env NODE_ENV=production BUILD_ENV=PRO webpack --config config/webpack.dll.js"
+    "build": "cross-env NODE_ENV=dev webpack --config config/webpack.prod.js",
+    "build:sit": "cross-env NODE_ENV=sit webpack --config config/webpack.dll.js",
+    "build:uat": "cross-env NODE_ENV=uat webpack --config config/webpack.dll.js",
+    "build:pro": "cross-env NODE_ENV=pro webpack --config config/webpack.dll.js"
   },
   "repository": {
     "type": "git",

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { Route, Redirect } from 'dva/router';
 import { isFunction } from '../../utils';
 
-/* 不要在render中写注释啦会报警告：Uncaught Error: Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.
+/** 权限路由
 * strict： // /one/ 不匹配 /pne
 * exact： /one 不匹配 /one/two
 * render： 这里不能使用component={() => {}}，router使用React.createElement根据给的component创建新的React元素。这里实用内联函数（inline-function）会产生不必要的重复装载。应使用render props；

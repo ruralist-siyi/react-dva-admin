@@ -8,6 +8,7 @@
 import {fromJS} from 'immutable';
 import user from '../services/user';
 import {routerRedux} from 'dva/router';
+import {encryptAES} from '../utils/crypto';
 
 const initialState = fromJS({
   userInfo: {},
@@ -46,11 +47,11 @@ export default {
         yield put({type: 'setUserInfo', payload: data});
         // 存储权限资源信息
         yield put({type: 'setResourceList', payload: resourceList});
-        // 存储token, token
-        sessionStorage.setItem('token', data.token);
+        // 存储、加密token
+        sessionStorage.setItem('token', encryptAES(data.token,'token'));
 
         // 跳转到首页
-        yield put(routerRedux.push('/home'));
+        yield put(routerRedux.push('/'));
       } catch (error) {
         throw error;
       }
