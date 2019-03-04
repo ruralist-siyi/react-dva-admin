@@ -8,6 +8,7 @@
 import {fromJS} from 'immutable';
 
 const initialState = fromJS({
+  menuCollapsed: false,
   routesData: {}
 });
 
@@ -18,6 +19,9 @@ export default {
     setRoutesData(state, {payload: routesData}) {
       return state.set('routesData', routesData);
     },
+    toggleMenuCollapsed(state) {
+      return state.set('routesData', !state.get('menuCollapsed'));
+    }
   },
   effects: {
     /**

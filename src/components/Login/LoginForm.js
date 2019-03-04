@@ -42,6 +42,7 @@ const LoginForm = React.memo(({form: {getFieldDecorator}, createCode, submit, ve
       <Form.Item className={styles['login-form-item']}>
         {getFieldDecorator('code', {
           validateTrigger: 'onBlur',
+          validateFirst: true,
           rules: [
             {required: true, message: '请输入验证码'},
             {
