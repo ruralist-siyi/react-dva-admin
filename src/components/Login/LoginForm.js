@@ -3,6 +3,10 @@ import {Form, Icon, Input, Button} from 'antd';
 import styles from './LoginForm.module.less';
 import PropTypes from "prop-types";
 
+/**
+ * 登录页面的表单组件
+ * @type {React.NamedExoticComponent<{form?: {getFieldDecorator: *}, submit?: *, verifyCode?: {code: *, dataURL: *}, createCode?: *}>}
+ */
 const LoginForm = React.memo(({form: {getFieldDecorator}, createCode, submit, verifyCode: {code, dataURL}}) => {
   return (
     <Form onSubmit={submit} className={styles['login-form']}>

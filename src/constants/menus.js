@@ -23,7 +23,7 @@ class Menus {
     this.initMenusData = initMenusData;
   }
 
-  getAllMenusDatta() {
+  getAllMenusData() {
     return this.initMenusData;
   }
 }

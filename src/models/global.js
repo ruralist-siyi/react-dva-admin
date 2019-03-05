@@ -20,7 +20,7 @@ export default {
       return state.set('routesData', routesData);
     },
     toggleMenuCollapsed(state) {
-      return state.set('routesData', !state.get('menuCollapsed'));
+      return state.set('menuCollapsed', !state.get('menuCollapsed'));
     }
   },
   effects: {

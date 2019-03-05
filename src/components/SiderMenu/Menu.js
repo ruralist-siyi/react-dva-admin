@@ -4,7 +4,10 @@ import { Link } from 'dva/router';
 import GlobalContext from '../../layouts/GlobalContext';
 
 const SubMenu = Menu.SubMenu;
-
+/**
+ * 左侧菜单的具体菜单项组件
+ * @type {React.NamedExoticComponent<{menusData?: *}>}
+ */
 const MenuContent = React.memo(({menusData}) => {
   console.log(menusData);
   return (
