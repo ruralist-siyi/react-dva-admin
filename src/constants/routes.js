@@ -57,15 +57,18 @@ function dynamicWrapper(app, models = [], component) {
  * @returns {{path: string, routes: *[], component: *, name: string}[]}
  */
 export const getRoutesConfig = (app) => {
-  return [
-    {
-      path: '/user',
-      component: dynamicWrapper(app, [], React.lazy(() => import('../layouts/UserLayout'))),
-      name: '用户',
-      routes: [
-        {path: '/user', redirect: '/user/login'},
-        {path: '/user/login', component: dynamicWrapper(app, [], React.lazy(() => import('../containers/Login'))), name: '登录' },
-      ],
+  return {
+    '/user/login': {
+      title: '登录',
+      component:  dynamicWrapper(app, [], React.lazy(() => import('../containers/Login')))
     },
-  ];
+    '/workBench/complete': {
+      title: '已办任务',
+      component: dynamicWrapper(app, [], React.lazy(() => import('../containers/WorkBench/CompleteWork')))
+    },
+    '/workBench/pending': {
+      title: '待办任务',
+      component: dynamicWrapper(app, [], React.lazy(() => import('../containers/WorkBench/PendingWork')))
+    },
+  }
 };

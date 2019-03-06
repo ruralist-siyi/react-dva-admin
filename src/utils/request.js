@@ -19,7 +19,7 @@ const envURLs = {
 // 接口请求的域名，两种选择方式，默认dev的url
 // 完全根据参数选择baseURL
 const isDev = process.env.NODE_ENV === 'development';
-const baseURL = !isDev ? envURLs[process.env.NODE_ENV.toLowerCase()] : envURLs.dev;
+const baseURL = !isDev ? envURLs.sit : envURLs.dev;
 
 /**
  * 基本 fetch 配置

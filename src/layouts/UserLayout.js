@@ -6,8 +6,9 @@ import {connect} from 'dva';
 import Login from '../containers/Login';
 import {Bind} from "lodash-decorators";
 
-@connect(({routing}) => ({
-  pathname: routing.location.pathname
+@connect(({routing, global}) => ({
+  pathname: routing.location.pathname,
+  routesData: global.get('routesData')
 }))
 class UserLayout extends Component {
   constructor(props) {
@@ -16,9 +17,22 @@ class UserLayout extends Component {
   }
 
   @Bind()
-  renderRoutes() {
-    const {pathname} = this.props;
-
+  renderUserRoutes() {
+    const {pathname, routesData} = this.props;
+    let routers = [];
+    if(routesData && Array.isArray(routesData)) {
+      for(let value of routesData) {
+       if(value.path && value.path === '/user') {
+         if(value.routes && Array.isArray(value.routes)) {
+            routers = value.routes.map((item) => {
+             const {path, redirect, component} = item;
+             return <Route component={component} path={path} redirect={redirect} authority={true}/>
+           })
+         }
+       }
+      }
+    }
+  return routers;
   }
 
   render() {
@@ -26,10 +40,6 @@ class UserLayout extends Component {
       <React.Fragment>
         <div className={styles['user-wrap']}>
           <div className={styles['login-content']}>
-            {/* <img className={styles['login-logo']} src="/static/images/login-logo.png" alt=""/> */}
-            {
-              this.renderRoutes()
-            }
             <AuthorizedRoute component={Login} path='/user/login' authority={true}/>
           </div>
         </div>

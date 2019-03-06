@@ -22,7 +22,7 @@ const LoginForm = React.memo(({form: {getFieldDecorator}, createCode, submit, ve
           <Input
             addonBefore={<Icon type="user" style={{color: '#909399'}}/>}
             placeholder="用户名"
-            autocomplete="nope"
+            autoComplete="nope"
             size='large'
           />
         )}

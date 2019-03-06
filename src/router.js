@@ -9,7 +9,7 @@ import {routerRedux, Route, Switch, Redirect} from 'dva/router';
 // antd 国际化配置
 import {LocaleProvider} from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
-import {getRoutesConfig} from './routes';
+import {getRoutesConfig} from './constants/routes';
 import AuthorizedRoute from './components/common/AuthorizedRoute';
 import store from './index';
 import UserLayout from './layouts/UserLayout';

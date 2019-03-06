@@ -11,8 +11,8 @@ import {routerRedux} from 'dva/router';
 import {encryptAES} from '../utils/crypto';
 
 const initialState = fromJS({
-  userInfo: {},
-  routesData: {}
+  userInfo: null,
+  routesData: null,
 });
 
 export default {
@@ -24,9 +24,6 @@ export default {
     },
     setResourceList(state, {payload}) {
       return state.set('resourceList', payload);
-    },
-    setRoutesData(state, {payload}) {
-      return state.set('routesData', payload);
     },
   },
   effects: {
@@ -49,7 +46,6 @@ export default {
         yield put({type: 'setResourceList', payload: resourceList});
         // 存储、加密token
         sessionStorage.setItem('token', encryptAES(data.token,'token'));
-
         // 跳转到首页
         yield put(routerRedux.push('/'));
       } catch (error) {

@@ -2,23 +2,26 @@ import React from 'react';
 import {Menu, Icon} from 'antd';
 import { Link } from 'dva/router';
 import GlobalContext from '../../layouts/GlobalContext';
+import styles from './SiderMenu.module.less';
 
 const SubMenu = Menu.SubMenu;
-/**
+
+/** TODO: 这块代码需要优化重构
  * 左侧菜单的具体菜单项组件
  * @type {React.NamedExoticComponent<{menusData?: *}>}
  */
-const MenuContent = React.memo(({menusData}) => {
-  console.log(menusData);
+const MenuContent = React.memo(({menusData, selectedKeys}) => {
+  const defaultOpenKeys= selectedKeys ? ['/' + selectedKeys.split('/')[1]] : [];
   return (
     <GlobalContext.Consumer>
       {({theme: {menuTheme}}) => {
         return (
-          <Menu theme={menuTheme} mode="inline" defaultSelectedKeys={['1']}>
+          <Menu defaultOpenKeys={defaultOpenKeys} selectedKeys={[selectedKeys]} className={styles['menus-wrap']} theme={menuTheme} mode="inline" defaultSelectedKeys={['1']}>
             {
-              menusData.map((item) => {
+              (menusData || []).map((item) => {
                 const iconPath = item.icon || null;
                 if (item.children && Array.isArray(item.children)) {
+                  console.log(item.path);
                   return (
                     <SubMenu
                       key={item.path}
@@ -34,7 +37,7 @@ const MenuContent = React.memo(({menusData}) => {
                           <Menu.Item key={item.path}>
                             <Link
                               to={item.path}
-                              // replace={path === location.pathname}
+                              replace={item.path === selectedKeys}
                             >{item.title} </Link>
                           </Menu.Item>
 
@@ -47,7 +50,7 @@ const MenuContent = React.memo(({menusData}) => {
                     <Menu.Item key={item.path}>
                       <Link
                         to={item.path}
-                        // replace={path === location.pathname}
+                        replace={item.path === selectedKeys}
                       >{item.title} </Link>
                     </Menu.Item>
                   )

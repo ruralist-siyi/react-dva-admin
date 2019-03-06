@@ -1,17 +1,17 @@
 const initMenusData = [
   {
     title: '工作台',
-    path: '/workbench',
+    path: '/workBench',
     icon: 'laptop',
     children: [
       {
         title: '待办任务',
-        path: '/workbench/pending',
+        path: '/workBench/pending',
         icon: '',
       },
       {
         title: '已办任务',
-        path: '/workbench/complete',
+        path: '/workBench/complete',
         icon: '',
       },
     ],
@@ -26,6 +26,24 @@ class Menus {
   getAllMenusData() {
     return this.initMenusData;
   }
+
+  getFlatMenusConfig() {
+    const menusData = this.getAllMenusData();
+    let flatData = {};
+    if(menusData && Array.isArray(menusData)) {
+      menusData.map((item) => {
+        flatData[item.path] = {...item};
+        const path = item.path;
+        if(item.children && Array.isArray(item.children)) {
+          for(let value of item.children) {
+            flatData[value.path] = {...value, parentPath : path};
+          }
+        }
+      })
+    }
+    return flatData;
+  }
+
 }
 
 export default Menus;

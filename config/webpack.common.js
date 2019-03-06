@@ -213,14 +213,7 @@ module.exports = {
       ],
       entry: {
         ReactStuff: [
-          "react",
-          "react-dom",
-          "redux-logger",
-          "redux-persist",
-          "immutable",
-          "reselect",
-          "dva",
-          "dva-loading"
+
         ],
         ToolStuff: ["lodash", "lodash-decorators", "crypto-js", "classnames"]
       }
