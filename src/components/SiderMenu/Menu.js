@@ -1,6 +1,6 @@
 import React from 'react';
 import {Menu, Icon} from 'antd';
-import { Link } from 'dva/router';
+import {Link} from 'dva/router';
 import GlobalContext from '../../layouts/GlobalContext';
 import styles from './SiderMenu.module.less';
 
@@ -11,17 +11,22 @@ const SubMenu = Menu.SubMenu;
  * @type {React.NamedExoticComponent<{menusData?: *}>}
  */
 const MenuContent = React.memo(({menusData, selectedKeys}) => {
-  const defaultOpenKeys= selectedKeys ? ['/' + selectedKeys.split('/')[1]] : [];
+  const defaultOpenKeys = selectedKeys ? ['/' + selectedKeys.split('/')[1]] : [];
   return (
     <GlobalContext.Consumer>
       {({theme: {menuTheme}}) => {
         return (
-          <Menu defaultOpenKeys={defaultOpenKeys} selectedKeys={[selectedKeys]} className={styles['menus-wrap']} theme={menuTheme} mode="inline" defaultSelectedKeys={['1']}>
+          <Menu
+            defaultOpenKeys={defaultOpenKeys}
+            selectedKeys={[selectedKeys]}
+            className={styles['menus-wrap']}
+            theme={menuTheme} mode="inline"
+            defaultSelectedKeys={['1']}
+          >
             {
-              (menusData || []).map((item) => {
+              (menusData.toJS() || []).map((item) => {
                 const iconPath = item.icon || null;
                 if (item.children && Array.isArray(item.children)) {
-                  console.log(item.path);
                   return (
                     <SubMenu
                       key={item.path}
@@ -33,7 +38,6 @@ const MenuContent = React.memo(({menusData, selectedKeys}) => {
                       }>
                       {
                         item.children.map((item) => (
-
                           <Menu.Item key={item.path}>
                             <Link
                               to={item.path}
@@ -45,7 +49,7 @@ const MenuContent = React.memo(({menusData, selectedKeys}) => {
                       }
                     </SubMenu>
                   )
-                }else {
+                } else {
                   return (
                     <Menu.Item key={item.path}>
                       <Link

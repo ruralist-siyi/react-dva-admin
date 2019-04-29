@@ -1,13 +1,21 @@
 import React, {Component} from 'react';
 import {Bind} from 'lodash-decorators';
-import {Card, Form, Icon, Input, Button} from 'antd';
+import {Card} from 'antd';
 import {connect} from 'dva';
+import PropTypes from "prop-types";
+import Loading from '../../components/common/Loading';
 import verification from "../../utils/verificationCode";
 import styles from "../Login/Login.module.less";
 import LoginForm from '../../components/Login/LoginForm';
 
-@connect()
+@connect(({loading}) => ({
+  loginLoading: loading.effects['user/login']
+}))
 class Login extends Component {
+  static propTypes = {
+    loginLoading: PropTypes.bool,
+  };
+
   state = {
     verifyCode: {
       code: null,
@@ -62,6 +70,7 @@ class Login extends Component {
   }
 
   render() {
+    const {loginLoading} = this.props;
     const {verifyCode} = this.state;
     return (
       <Card className={styles['login-form-wrap']}>
@@ -71,6 +80,7 @@ class Login extends Component {
           createCode={this.createCode}
           verifyCode={verifyCode}
         />
+        <Loading loading={loginLoading} />
       </Card>
     )
   }

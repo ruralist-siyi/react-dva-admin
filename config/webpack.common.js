@@ -1,6 +1,6 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const path = require("path");
-const setting  = require('./setting.js');
+const setting = require('./setting.js');
 // 抽离css样式，防止将样式打包在js中引起页面样式加载错乱的现象。
 // extract-text-webpack-plugin does not work with webpack 4. Use mini-css-extract-plugin instead.
 //This plugin should be used only on production builds without style-loader in the loaders chain, especially if you want to have HMR in development.
@@ -205,15 +205,18 @@ module.exports = {
       inject: true, // will inject the DLL bundles to index.html
       filename: "[name].[hash].dll.js",
       path: "static/js",
-      plugins: [
-        new UglifyJsPlugin({
-          sourceMap: isDev,
-          cache: true,
-        })
-      ],
+      debug: isDev,
+      plugins: [new UglifyJsPlugin({sourceMap: isDev, cache: true})],
       entry: {
         ReactStuff: [
-
+          'react',
+          'react-dom',
+          'redux-logger',
+          'redux-persist',
+          'immutable',
+          'reselect',
+          'dva',
+          'dva-loading'
         ],
         ToolStuff: ["lodash", "lodash-decorators", "crypto-js", "classnames"]
       }

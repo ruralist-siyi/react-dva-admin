@@ -60,7 +60,8 @@ export const getRoutesConfig = (app) => {
   return {
     '/user/login': {
       title: '登录',
-      component:  dynamicWrapper(app, [], React.lazy(() => import('../containers/Login')))
+      component:  dynamicWrapper(app, [], React.lazy(() => import('../containers/Login'))),
+      authority: true
     },
     '/workBench/complete': {
       title: '已办任务',
@@ -68,6 +69,10 @@ export const getRoutesConfig = (app) => {
     },
     '/workBench/pending': {
       title: '待办任务',
+      component: dynamicWrapper(app, [], React.lazy(() => import('../containers/WorkBench/PendingWork')))
+    },
+    '/workBench/pending1': {
+      title: '待办任务1',
       component: dynamicWrapper(app, [], React.lazy(() => import('../containers/WorkBench/PendingWork')))
     },
   }

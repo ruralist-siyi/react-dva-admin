@@ -12,12 +12,11 @@ import {HttpException, RequestException, Exception} from './exception';
 import {trimReg} from '../constants/regexp';
 
 const envURLs = {
-  dev: 'http://192.168.3.122:8035',
+  dev: 'http://47.97.114.40:8040',
   sit: 'http://47.98.239.167:8035',
-  uat: 'http://192.168.3.122:8035',
 };
+// TODO:支持更多参数配置请求的环境
 // 接口请求的域名，两种选择方式，默认dev的url
-// 完全根据参数选择baseURL
 const isDev = process.env.NODE_ENV === 'development';
 const baseURL = !isDev ? envURLs.sit : envURLs.dev;
 

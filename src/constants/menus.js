@@ -27,6 +27,20 @@ class Menus {
     return this.initMenusData;
   }
 
+  getAuthorizedMenuData(resources) {
+    if(!resources || resources.length === 0) {
+      return [];
+    }else {
+      return this.initMenusData.filter((menu) => {
+        if (resources.includes(menu.path)) {
+          menu.children = menu.children.filter(({path}) => resources.includes(path));
+          return true;
+        }
+        return false;
+      })
+    }
+  }
+
   getFlatMenusConfig() {
     const menusData = this.getAllMenusData();
     let flatData = {};

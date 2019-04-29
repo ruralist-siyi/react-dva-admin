@@ -3,6 +3,7 @@ import {Breadcrumb, Icon} from 'antd';
 import styles from './Bread.module.less';
 
 const Bread = React.memo(({formatMenusData, location, routesData}) => {
+  routesData = routesData.toJS();
   const {pathname} = location;
   return (
     <Breadcrumb className={styles['bread-wrap']}>
